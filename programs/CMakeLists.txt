@@ -1,0 +1,5 @@
+add_subdirectory( noddfc )
+add_subdirectory( cldfc )
+add_subdirectory( kdfcd )
+add_subdirectory( dfcio-launcher )
+add_subdirectory( dfcio-blocklog )

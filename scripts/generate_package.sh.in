@@ -1,0 +1,65 @@
+#! /bin/bash
+
+VARIANT=$1
+VERSION_TAG=$2
+
+VERSION_NO_SUFFIX="@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@"
+VERSION_SUFFIX="@VERSION_SUFFIX@"
+VERSION="@VERSION_FULL@"
+BUILD_DIR="@CMAKE_BINARY_DIR@"
+
+VENDOR="@VENDOR@"
+PROJECT="@PROJECT_NAME@"
+DESC="@DESC@"
+URL="@URL@"
+EMAIL="@EMAIL@"
+
+if [[ ${VARIANT} != "deb" && ${VARIANT} != "rpm" ]]; then
+  echo "Error, unknown package type. Use either ['deb', 'rpm']."
+  exit -1
+fi
+
+if [[ -z $2 ]]; then
+   VERSION_TAG="dev"
+elif [[ ${VERSION_TAG} != "dev" && ${VERSION_TAG} != "beta" && ${VERSION_TAG} != "dawn" && ${VERSION_TAG} != "release" ]]; then
+  echo "Error, unknown package TAG. Use either ['dev', 'beta', 'dawn','release'] !"
+  exit -1
+fi
+
+if [[ -n $2 && -n $3 ]]; then
+  len=`echo "$3"|sed 's/[0-9]//g'|sed 's/-//g'`
+  if [[ -n $2 && -n $3 && -n $len ]]; then
+    echo "Error, The version suffix must be a number, iput is $3!"
+    exit -1
+  else 
+    VERSION_SUFFIX=$3
+  fi
+fi 
+
+export BUILD_DIR
+export VERSION_TAG
+export VERSION_NO_SUFFIX
+export VERSION_SUFFIX
+export VERSION
+export VENDOR
+export PROJECT
+export DESC
+export URL
+export EMAIL
+
+mkdir tmp
+
+if [[ ${VARIANT} == "deb" ]]; then
+   bash generate_deb.sh
+elif [[ ${VARIANT} == "rpm" ]]; then
+   bash generate_rpm.sh
+else
+   echo "Error, unknown package type. Use either ['deb', 'rpm']."
+   exit -1
+fi   
+
+BUILDSTATUS=$?
+
+rm -r tmp
+
+exit $BUILDSTATUS

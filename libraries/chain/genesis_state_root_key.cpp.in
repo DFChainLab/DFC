@@ -1,0 +1,12 @@
+/**
+ *  @file
+ *  @copyright defined in dfc/LICENSE
+ */
+
+#include <dfcio/chain/genesis_state.hpp>
+
+namespace dfcio { namespace chain {
+
+const string genesis_state::dfcio_root_key = "${DFCIO_ROOT_KEY}";
+
+} } // namespace dfcio::chain
